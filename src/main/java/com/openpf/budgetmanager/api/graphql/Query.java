@@ -1,11 +1,12 @@
 package com.openpf.budgetmanager.api.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.openpf.budgetmanager.accounting.model.*;
+import com.openpf.budgetmanager.accounting.model.Account;
+import com.openpf.budgetmanager.accounting.model.Currency;
+import com.openpf.budgetmanager.accounting.model.Transaction;
 import com.openpf.budgetmanager.accounting.repository.AccountRepo;
 import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
 import com.openpf.budgetmanager.accounting.repository.TransactionRepo;
-import com.openpf.budgetmanager.accounting.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -16,8 +17,6 @@ import java.util.Optional;
 @Component
 public class Query implements GraphQLQueryResolver {
 
-    private CategoryService categoryService;
-
     private CurrencyRepo currencyRepo;
 
     private TransactionRepo transactionRepo;
@@ -26,21 +25,12 @@ public class Query implements GraphQLQueryResolver {
 
     @Autowired
     public Query(
-            CategoryService categoryService, CurrencyRepo currencyRepo,
+            CurrencyRepo currencyRepo,
             TransactionRepo transactionRepo, AccountRepo accountRepo
     ) {
-        this.categoryService = categoryService;
         this.currencyRepo = currencyRepo;
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
-    }
-
-    public List<Category> getCategories() {
-        return categoryService.all();
-    }
-
-    public Optional<Category> getCategory(Long id) {
-        return categoryService.get(id);
     }
 
     public List<Account> getAccounts() {

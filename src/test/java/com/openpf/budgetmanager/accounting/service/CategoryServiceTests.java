@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import java.util.Collections;
 import java.util.Optional;
 
+import static com.openpf.budgetmanager.testutil.CategoryHelper.createCategory;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -149,13 +150,5 @@ class CategoryServiceTests {
         verify(repo).findById(any());
         verifyNoMoreInteractions(repo);
         assertTrue(opt.isEmpty());
-    }
-
-    private Category createCategory(Long id, String title) {
-        var category = new Category();
-        category.id = id;
-        category.title = title;
-
-        return category;
     }
 }
