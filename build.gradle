@@ -17,6 +17,7 @@ buildscript {
 
 plugins {
     id "org.flywaydb.flyway" version "5.2.1"
+    id "com.gorylenko.gradle-git-properties" version "2.0.0-beta1"
 }
 
 apply plugin: 'java'
@@ -64,6 +65,20 @@ dependencies {
 
 jacoco {
     toolVersion = '0.8.2'
+}
+
+gitProperties {
+    keys = [
+            'git.branch',
+            'git.commit.id',
+            'git.commit.time',
+            'git.commit.id.abbrev',
+            'git.dirty',
+            'git.commit.message.short',
+            'git.tags',
+            'git.build.time',
+            'git.build.version'
+    ]
 }
 
 test {
