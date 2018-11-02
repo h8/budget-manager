@@ -18,7 +18,9 @@ public class CategoryService {
     }
 
     public Optional<Category> get(Long id) {
-        return repo.findById(id);
+        return (id != null)
+                ? repo.findById(id)
+                : Optional.empty();
     }
 
     public Category create(String title) {
