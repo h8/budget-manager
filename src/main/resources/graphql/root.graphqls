@@ -1,0 +1,38 @@
+type Category {
+    id: ID!
+    title: String!
+}
+
+type Currency {
+    id: ID!
+    code: String!
+}
+
+type Transaction {
+    id: ID!
+    amount: Float!
+    currency: Currency!
+    category: Category
+    description: String
+}
+
+
+# The Root Query for the application
+type Query {
+    categories: [Category]!
+    category(id: ID!): Category
+
+    currencies: [Currency]!
+    transactions: [Transaction]!
+}
+
+# Root mutation query
+type Mutation {
+    addCategory(title: String!): Category!
+    deleteCategory(id: ID!): Category
+    renameCategory(id: ID!, title: String!): Category
+
+    addCurrency(code: String!): Currency
+
+    createTransaction(amount: Float!, currency_id: Int!, category_id: Int, description: String): Transaction!
+}

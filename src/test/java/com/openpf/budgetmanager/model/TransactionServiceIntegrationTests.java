@@ -1,0 +1,65 @@
+package com.openpf.budgetmanager.model;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
+@ExtendWith(SpringExtension.class)
+@Tag("slow")
+@ActiveProfiles("integration")
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+class TransactionServiceIntegrationTests {
+
+    @Autowired
+    TransactionRepo transactionRepo;
+
+    @Autowired
+    CurrencyRepo currencyRepo;
+
+    @Autowired
+    CategoryService categoryService;
+
+    @Test
+    @DisplayName("Get by Id should return value")
+    @Sql({"/datasets/categories-01.sql", "/datasets/transactions-01.sql"})
+    @Transactional
+    void getByIdReturnsEntity() {
+        var transactionOptional = transactionRepo.findById(1L);
+
+        assertTrue(transactionOptional.isPresent());
+        var tr = transactionOptional.get();
+
+        assertNotNull(tr.category);
+        assertNotNull(tr.currency);
+    }
+
+    @Test
+    @DisplayName("Should save")
+    @Sql({"/datasets/categories-01.sql"})
+    @Transactional
+    void save() {
+        var tr = new Transaction();
+        tr.currency = currencyRepo.findById(1L).orElseThrow(AssertionError::new);
+        tr.category = categoryService.get(1L).orElse(null);
+        tr.amount = -15.0;
+        tr.description = "Test";
+
+        var saved = transactionRepo.save(tr);
+
+        assertEquals("PLN", saved.currency.code);
+        assertEquals("Category 1", saved.category.title);
+        assertNotNull(saved.createdAt);
+    }
+}
