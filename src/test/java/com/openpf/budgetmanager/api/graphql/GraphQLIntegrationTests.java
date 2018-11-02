@@ -1,4 +1,4 @@
-package com.openpf.budgetmanager;
+package com.openpf.budgetmanager.api.graphql;
 
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
 import org.junit.jupiter.api.Tag;
@@ -18,7 +18,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("integration")
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-public class GraphQLTests {
+public class GraphQLIntegrationTests {
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired

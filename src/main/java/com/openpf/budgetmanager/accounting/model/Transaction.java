@@ -1,4 +1,4 @@
-package com.openpf.budgetmanager.model;
+package com.openpf.budgetmanager.accounting.model;
 
 import org.hibernate.annotations.CreationTimestamp;
 

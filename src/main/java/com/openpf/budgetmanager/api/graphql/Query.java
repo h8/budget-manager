@@ -1,7 +1,11 @@
-package com.openpf.budgetmanager.graphql;
+package com.openpf.budgetmanager.api.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-import com.openpf.budgetmanager.model.*;
+import com.openpf.budgetmanager.accounting.model.*;
+import com.openpf.budgetmanager.accounting.repository.AccountRepo;
+import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
+import com.openpf.budgetmanager.accounting.repository.TransactionRepo;
+import com.openpf.budgetmanager.accounting.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;

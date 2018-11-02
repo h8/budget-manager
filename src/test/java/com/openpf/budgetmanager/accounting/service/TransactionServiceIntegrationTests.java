@@ -1,5 +1,8 @@
-package com.openpf.budgetmanager.model;
+package com.openpf.budgetmanager.accounting.service;
 
+import com.openpf.budgetmanager.accounting.model.Transaction;
+import com.openpf.budgetmanager.accounting.repository.AccountRepo;
+import com.openpf.budgetmanager.accounting.repository.TransactionRepo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @ExtendWith(SpringExtension.class)

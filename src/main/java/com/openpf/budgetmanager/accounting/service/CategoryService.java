@@ -1,5 +1,7 @@
-package com.openpf.budgetmanager.model;
+package com.openpf.budgetmanager.accounting.service;
 
+import com.openpf.budgetmanager.accounting.model.Category;
+import com.openpf.budgetmanager.accounting.repository.CategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

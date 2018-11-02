@@ -1,5 +1,8 @@
-package com.openpf.budgetmanager.model;
+package com.openpf.budgetmanager.accounting.service;
 
+import com.openpf.budgetmanager.accounting.model.Category;
+import com.openpf.budgetmanager.accounting.repository.CategoryRepo;
+import com.openpf.budgetmanager.accounting.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
