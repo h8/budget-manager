@@ -26,6 +26,9 @@ public class Transaction {
     @Column(columnDefinition = "TEXT")
     public String description;
 
+    @Column(columnDefinition = "DATE")
+    public Date date;
+
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at")

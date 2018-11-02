@@ -5,6 +5,9 @@ import com.openpf.budgetmanager.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -57,12 +60,17 @@ public class Mutation implements GraphQLMutationResolver {
         return accountRepo.save(account);
     }
 
-    public Transaction addTransaction(double amount, long accountId, Long categoryId, String description) {
+    public Transaction addTransaction(
+            double amount, long accountId,
+            Long categoryId, String description, String date) {
         var tr = new Transaction();
         tr.amount = amount;
         tr.account = accountRepo.findById(accountId).orElseThrow();
         tr.category = categoryService.get(categoryId).orElse(null);
         tr.description = description;
+        tr.date = (date != null)
+                ? Date.from(LocalDate.parse(date).atStartOfDay(ZoneId.systemDefault()).toInstant())
+                : new Date();
 
         return transactionRepo.save(tr);
     }

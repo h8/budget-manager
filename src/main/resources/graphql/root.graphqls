@@ -21,6 +21,7 @@ type Transaction {
     account: Account!
     category: Category
     description: String
+    date: String!
 }
 
 
@@ -46,5 +47,5 @@ type Mutation {
 
     addAccount(title: String!, currency_id: ID!, description: String): Account
 
-    addTransaction(amount: Float!, account_id: ID!, category_id: ID, description: String): Transaction!
+    addTransaction(amount: Float!, account_id: ID!, category_id: ID, description: String, date: String): Transaction!
 }

@@ -11,6 +11,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -55,6 +57,7 @@ class TransactionServiceIntegrationTests {
         tr.category = categoryService.get(1L).orElse(null);
         tr.amount = -15.0;
         tr.description = "Test";
+        tr.date = new Date();
 
         var saved = transactionRepo.save(tr);
 
