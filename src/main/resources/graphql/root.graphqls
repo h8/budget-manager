@@ -8,10 +8,17 @@ type Currency {
     code: String!
 }
 
+type Account {
+    id: ID!
+    title: String!
+    description: String,
+    currency: Currency!
+}
+
 type Transaction {
     id: ID!
     amount: Float!
-    currency: Currency!
+    account: Account!
     category: Category
     description: String
 }
@@ -21,6 +28,9 @@ type Transaction {
 type Query {
     categories: [Category]!
     category(id: ID!): Category
+
+    accounts: [Account]!
+    account(id: ID!): Account
 
     currencies: [Currency]!
     transactions: [Transaction]!
@@ -34,5 +44,7 @@ type Mutation {
 
     addCurrency(code: String!): Currency
 
-    createTransaction(amount: Float!, currency_id: Int!, category_id: Int, description: String): Transaction!
+    addAccount(title: String!, currency_id: ID!, description: String): Account
+
+    addTransaction(amount: Float!, account_id: ID!, category_id: ID, description: String): Transaction!
 }

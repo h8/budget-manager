@@ -26,14 +26,14 @@ class TransactionServiceIntegrationTests {
     TransactionRepo transactionRepo;
 
     @Autowired
-    CurrencyRepo currencyRepo;
+    AccountRepo accountRepo;
 
     @Autowired
     CategoryService categoryService;
 
     @Test
     @DisplayName("Get by Id should return value")
-    @Sql({"/datasets/categories-01.sql", "/datasets/transactions-01.sql"})
+    @Sql({"/datasets/categories-01.sql", "/datasets/accounts-01.sql", "/datasets/transactions-01.sql"})
     @Transactional
     void getByIdReturnsEntity() {
         var transactionOptional = transactionRepo.findById(1L);
@@ -42,23 +42,23 @@ class TransactionServiceIntegrationTests {
         var tr = transactionOptional.get();
 
         assertNotNull(tr.category);
-        assertNotNull(tr.currency);
+        assertNotNull(tr.account);
     }
 
     @Test
     @DisplayName("Should save")
-    @Sql({"/datasets/categories-01.sql"})
+    @Sql({"/datasets/categories-01.sql", "/datasets/accounts-01.sql"})
     @Transactional
     void save() {
         var tr = new Transaction();
-        tr.currency = currencyRepo.findById(1L).orElseThrow(AssertionError::new);
+        tr.account = accountRepo.findById(1L).orElseThrow(AssertionError::new);
         tr.category = categoryService.get(1L).orElse(null);
         tr.amount = -15.0;
         tr.description = "Test";
 
         var saved = transactionRepo.save(tr);
 
-        assertEquals("PLN", saved.currency.code);
+        assertEquals("PLN", saved.account.currency.code);
         assertEquals("Category 1", saved.category.title);
         assertNotNull(saved.createdAt);
     }

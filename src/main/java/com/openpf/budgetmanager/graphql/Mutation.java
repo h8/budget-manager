@@ -16,11 +16,17 @@ public class Mutation implements GraphQLMutationResolver {
 
     private TransactionRepo transactionRepo;
 
+    private AccountRepo accountRepo;
+
     @Autowired
-    public Mutation(CategoryService categoryService, CurrencyRepo currencyRepo, TransactionRepo transactionRepo) {
+    public Mutation(
+            CategoryService categoryService, CurrencyRepo currencyRepo,
+            TransactionRepo transactionRepo, AccountRepo accountRepo
+    ) {
         this.categoryService = categoryService;
         this.currencyRepo = currencyRepo;
         this.transactionRepo = transactionRepo;
+        this.accountRepo = accountRepo;
     }
 
     public Category addCategory(String title) {
@@ -42,10 +48,19 @@ public class Mutation implements GraphQLMutationResolver {
         return currencyRepo.save(currency);
     }
 
-    public Transaction createTransaction(double amount, long currencyId, Long categoryId, String description) {
+    public Account addAccount(String title, Long currencyId, String description) {
+        var account = new Account();
+        account.title = title;
+        account.currency = currencyRepo.findById(currencyId).orElseThrow();
+        account.description = description;
+
+        return accountRepo.save(account);
+    }
+
+    public Transaction addTransaction(double amount, long accountId, Long categoryId, String description) {
         var tr = new Transaction();
         tr.amount = amount;
-        tr.currency = currencyRepo.findById(currencyId).orElseThrow();
+        tr.account = accountRepo.findById(accountId).orElseThrow();
         tr.category = categoryService.get(categoryId).orElse(null);
         tr.description = description;
 

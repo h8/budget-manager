@@ -18,11 +18,17 @@ public class Query implements GraphQLQueryResolver {
 
     private TransactionRepo transactionRepo;
 
+    private AccountRepo accountRepo;
+
     @Autowired
-    public Query(CategoryService categoryService, CurrencyRepo currencyRepo, TransactionRepo transactionRepo) {
+    public Query(
+            CategoryService categoryService, CurrencyRepo currencyRepo,
+            TransactionRepo transactionRepo, AccountRepo accountRepo
+    ) {
         this.categoryService = categoryService;
         this.currencyRepo = currencyRepo;
         this.transactionRepo = transactionRepo;
+        this.accountRepo = accountRepo;
     }
 
     public List<Category> getCategories() {
@@ -31,6 +37,14 @@ public class Query implements GraphQLQueryResolver {
 
     public Optional<Category> getCategory(Long id) {
         return categoryService.get(id);
+    }
+
+    public List<Account> getAccounts() {
+        return accountRepo.findAll(Sort.by("title"));
+    }
+
+    public Optional<Account> getAccount(Long id) {
+        return accountRepo.findById(id);
     }
 
     public List<Currency> getCurrencies() {

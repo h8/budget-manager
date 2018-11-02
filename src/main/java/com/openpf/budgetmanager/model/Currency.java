@@ -15,5 +15,5 @@ public class Currency {
     public String code;
 
     @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="currency")
-    public List<Transaction> transactions;
+    public List<Account> accounts;
 }

@@ -16,8 +16,8 @@ public class Transaction {
     public Double amount;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="currency_id")
-    public Currency currency;
+    @JoinColumn(name="account_id")
+    public Account account;
 
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="category_id")
