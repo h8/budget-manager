@@ -26,6 +26,10 @@ public class CategoryService {
     }
 
     public Category create(String title) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Category title can't be empty or null.");
+        }
+
         Category category = new Category();
         category.title = title;
 

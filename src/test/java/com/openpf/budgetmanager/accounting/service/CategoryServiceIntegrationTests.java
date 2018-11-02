@@ -1,13 +1,13 @@
 package com.openpf.budgetmanager.accounting.service;
 
 import com.openpf.budgetmanager.accounting.model.Category;
-import com.openpf.budgetmanager.accounting.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -54,6 +54,15 @@ class CategoryServiceIntegrationTests {
         assertNotNull(category);
         assertTrue(category.id > 0);
         assertEquals("Category 3", category.title);
+    }
+
+    @Test
+    @DisplayName("Create new with existing name")
+    @Transactional
+    void createNewWithExistingName() {
+        Category category = service.create("Category 3");
+        assertNotNull(category);
+        assertThrows(DataIntegrityViolationException.class, () -> service.create(category.title));
     }
 
     @Test
