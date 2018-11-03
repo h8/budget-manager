@@ -2,7 +2,6 @@ package com.openpf.budgetmanager.api.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.openpf.budgetmanager.accounting.model.Account;
-import com.openpf.budgetmanager.accounting.model.Currency;
 import com.openpf.budgetmanager.accounting.model.Transaction;
 import com.openpf.budgetmanager.accounting.repository.AccountRepo;
 import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
@@ -35,13 +34,6 @@ public class Mutation implements GraphQLMutationResolver {
         this.currencyRepo = currencyRepo;
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
-    }
-
-    public Currency addCurrency(String code) {
-        var currency = new Currency();
-        currency.code = code;
-
-        return currencyRepo.save(currency);
     }
 
     public Account addAccount(String title, Long currencyId, String description) {
