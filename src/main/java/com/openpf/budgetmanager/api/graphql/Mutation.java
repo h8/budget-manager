@@ -1,7 +1,9 @@
 package com.openpf.budgetmanager.api.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.openpf.budgetmanager.accounting.model.*;
+import com.openpf.budgetmanager.accounting.model.Account;
+import com.openpf.budgetmanager.accounting.model.Currency;
+import com.openpf.budgetmanager.accounting.model.Transaction;
 import com.openpf.budgetmanager.accounting.repository.AccountRepo;
 import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
 import com.openpf.budgetmanager.accounting.repository.TransactionRepo;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class Mutation implements GraphQLMutationResolver {
@@ -34,18 +35,6 @@ public class Mutation implements GraphQLMutationResolver {
         this.currencyRepo = currencyRepo;
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
-    }
-
-    public Category addCategory(String title) {
-        return categoryService.create(title);
-    }
-
-    public Optional<Category> deleteCategory(Long id) {
-        return categoryService.delete(id);
-    }
-
-    public Optional<Category> renameCategory(Long id, String title) {
-        return categoryService.rename(id, title);
     }
 
     public Currency addCurrency(String code) {
