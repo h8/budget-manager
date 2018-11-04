@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -24,11 +25,19 @@ class MutationCurrencyResolverTests {
 
     @Test
     @DisplayName("Add new currency")
-    void addCategory() {
+    void addCurrency() {
         when(service.add("USD")).thenReturn(createCurrency("USD"));
 
         var c = resolver.addCurrency("USD");
         assertEquals("USD", c.code);
         verify(service).add("USD");
+    }
+
+    @Test
+    @DisplayName("Try to add currency with invalid code")
+    void addInvalidCurrency() {
+        when(service.add("")).thenThrow(new IllegalArgumentException(""));
+
+        assertThrows(MutationException.class, () -> resolver.addCurrency(""));
     }
 }

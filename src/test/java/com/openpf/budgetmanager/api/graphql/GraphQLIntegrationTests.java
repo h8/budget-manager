@@ -1,6 +1,7 @@
 package com.openpf.budgetmanager.api.graphql;
 
 import com.graphql.spring.boot.test.GraphQLTestTemplate;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,22 @@ public class GraphQLIntegrationTests {
                 "    id\n" +
                 "    title\n" +
                 "  }}", "{}");
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Invalid currency add mutation")
+    void invalidCurrencyMutation() {
+        var response = testTemplate.postMultipart(
+                "mutation {\n" +
+                "    addCurrency(code: \"\") {\n" +
+                "        id\n" +
+                "        code\n" +
+                "    }\n" +
+                "}", "{}"
+        );
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());

@@ -17,6 +17,10 @@ public class MutationCurrencyResolver implements GraphQLMutationResolver {
     }
 
     public Currency addCurrency(String code) {
-        return service.add(code);
+        try {
+            return service.add(code);
+        } catch (Exception e) {
+            throw new MutationException(e.getMessage());
+        }
     }
 }
