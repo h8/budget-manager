@@ -1,10 +1,8 @@
 package com.openpf.budgetmanager.api.graphql;
 
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-import com.openpf.budgetmanager.accounting.model.Account;
 import com.openpf.budgetmanager.accounting.model.Transaction;
 import com.openpf.budgetmanager.accounting.repository.AccountRepo;
-import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
 import com.openpf.budgetmanager.accounting.repository.TransactionRepo;
 import com.openpf.budgetmanager.accounting.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,30 +17,18 @@ public class Mutation implements GraphQLMutationResolver {
 
     private CategoryService categoryService;
 
-    private CurrencyRepo currencyRepo;
-
     private TransactionRepo transactionRepo;
 
     private AccountRepo accountRepo;
 
     @Autowired
     public Mutation(
-            CategoryService categoryService, CurrencyRepo currencyRepo,
+            CategoryService categoryService,
             TransactionRepo transactionRepo, AccountRepo accountRepo
     ) {
         this.categoryService = categoryService;
-        this.currencyRepo = currencyRepo;
         this.transactionRepo = transactionRepo;
         this.accountRepo = accountRepo;
-    }
-
-    public Account addAccount(String title, Long currencyId, String description) {
-        var account = new Account();
-        account.title = title;
-        account.currency = currencyRepo.findById(currencyId).orElseThrow();
-        account.description = description;
-
-        return accountRepo.save(account);
     }
 
     public Transaction addTransaction(
