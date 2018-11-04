@@ -7,6 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 public class CurrencyService {
@@ -19,7 +22,10 @@ public class CurrencyService {
     }
 
     public List<Currency> all() {
-        return repo.findAll(Sort.by("code"));
+        // TODO: sorting Sort.by("code")
+        return StreamSupport
+                .stream(repo.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     public Currency add(String code) {

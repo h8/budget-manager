@@ -98,10 +98,11 @@ class CategoryServiceTests {
     @Test
     @DisplayName("Get all categories")
     void all() {
-        when(repo.findAll((Sort) any())).thenReturn(Collections.emptyList());
+        // TODO: sorting
+        when(repo.findAll()).thenReturn(Collections.emptyList());
 
         assertTrue(categoryService.all().isEmpty());
-        verify(repo).findAll((Sort) any());
+        verify(repo).findAll();
     }
 
     @Test

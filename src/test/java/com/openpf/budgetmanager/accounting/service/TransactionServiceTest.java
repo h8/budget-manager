@@ -40,14 +40,15 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Return all transactions")
     void all() {
-        when(repo.findAll(Sort.by("date").descending())).thenReturn(
+        //TODO: sorting
+        when(repo.findAll()).thenReturn(
                 Arrays.asList(createTransaction(1L), createTransaction(2L))
         );
 
         var list = service.all();
         assertEquals(2, list.size());
         assertEquals(1L, (long) list.get(0).id);
-        verify(repo).findAll(Sort.by("date").descending());
+        verify(repo).findAll();
     }
 
     @Test

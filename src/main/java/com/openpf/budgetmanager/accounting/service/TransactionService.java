@@ -12,6 +12,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class TransactionService {
@@ -34,7 +36,10 @@ public class TransactionService {
     }
 
     public List<Transaction> all() {
-        return repo.findAll(Sort.by("date").descending());
+        // TODO: sorting Sort.by("date").descending()
+        return StreamSupport
+                .stream(repo.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     public Transaction create(

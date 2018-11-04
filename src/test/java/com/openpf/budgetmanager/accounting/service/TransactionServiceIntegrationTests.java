@@ -32,6 +32,7 @@ class TransactionServiceIntegrationTests {
         var list = transactionService.all();
 
         assertEquals(3, list.size());
+        assertNotNull(list.get(0).account);
         assertEquals(2L, (long) list.get(0).id);
         assertEquals(1L, (long) list.get(1).id);
     }

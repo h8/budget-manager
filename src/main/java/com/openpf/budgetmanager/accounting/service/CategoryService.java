@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class CategoryService {
@@ -43,7 +45,10 @@ public class CategoryService {
     }
 
     public List<Category> all() {
-        return repo.findAll(Sort.by("title"));
+        // TODO: sorting Sort.by("title")
+        return StreamSupport
+                .stream(repo.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
     public Optional<Category> rename(Long id, String title) {

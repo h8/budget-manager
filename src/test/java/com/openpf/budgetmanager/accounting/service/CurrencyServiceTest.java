@@ -29,14 +29,15 @@ class CurrencyServiceTest {
     @Test
     @DisplayName("Return all currencies")
     void all() {
-        when(repo.findAll(Sort.by("code"))).thenReturn(
+        // TODO: sorting
+        when(repo.findAll()).thenReturn(
                 Arrays.asList(createCurrency("PLN"), createCurrency("USD"))
         );
 
         var list = service.all();
         assertEquals(2, list.size());
         assertEquals("PLN", list.get(0).code);
-        verify(repo).findAll((Sort) any());
+        verify(repo).findAll();
     }
 
     @Test
