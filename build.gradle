@@ -102,13 +102,14 @@ task testIntegration(type: Test) {
     shouldRunAfter test
 }
 
-flyway {
-    url = 'jdbc:postgresql://localhost:5432/opfdb'
-    user = 'openpf'
-    configurations = [ 'compile', 'flywayMigration' ]
-}
+// Read database connection properties from dev application properties to avoid duplication
+def appProperties = new Properties()
+file('src/main/resources/application.properties').withInputStream { appProperties.load(it) }
+def devDBUrl = appProperties.getProperty('spring.datasource.url')
+def devDBUsername = appProperties.getProperty('spring.datasource.username')
 
-task flywayCleanTestDB(type: FlywayCleanTask) {
-    url = 'jdbc:postgresql://localhost:5432/opfdb_test'
-    user = 'openpf'
+flyway {
+    url = devDBUrl
+    user = devDBUsername
+    configurations = [ 'compile', 'flywayMigration' ]
 }
