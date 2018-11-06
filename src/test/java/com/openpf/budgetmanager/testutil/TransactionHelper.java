@@ -6,7 +6,6 @@ import java.util.Date;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
 import static com.openpf.budgetmanager.testutil.CategoryHelper.createCategory;
-import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 
 public class TransactionHelper {
 
@@ -15,7 +14,7 @@ public class TransactionHelper {
         t.id = id;
         t.amount = -10D;
         t.category = createCategory(1L, "Category1");
-        t.account = createAccount(1L, "Account", createCurrency("USD"));
+        t.account = createAccount(1L, "Account", 1L);
         t.description = "Description";
         t.date = new Date();
         t.createdAt = new Date();

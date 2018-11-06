@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
-import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +30,7 @@ class QueryAccountResolverTests {
     @Test
     @DisplayName("Get all available accounts")
     void getAccounts() {
-        when(service.all()).thenReturn(Collections.singletonList(createAccount(1L, "A1", createCurrency("USD"))));
+        when(service.all()).thenReturn(Collections.singletonList(createAccount(1L, "A1", 1L)));
 
         var result = resolver.getAccounts();
         verify(service).all();
@@ -43,7 +42,7 @@ class QueryAccountResolverTests {
     @Test
     @DisplayName("Get single existing account")
     void getExistingAccount() {
-        when(service.get(10L)).thenReturn(Optional.of(createAccount(10L, "A10", createCurrency("USD"))));
+        when(service.get(10L)).thenReturn(Optional.of(createAccount(10L, "A10", 1L)));
 
         var opt = resolver.getAccount(10L);
         verify(service).get(10L);

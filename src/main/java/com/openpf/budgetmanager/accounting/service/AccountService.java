@@ -3,13 +3,10 @@ package com.openpf.budgetmanager.accounting.service;
 import com.openpf.budgetmanager.accounting.model.Account;
 import com.openpf.budgetmanager.accounting.repository.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class AccountService {
@@ -25,10 +22,7 @@ public class AccountService {
     }
 
     public List<Account> all() {
-        // TODO: sorting Sort.by("title")
-        return StreamSupport
-                .stream(repo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        return repo.findAllByOrderByTitleAsc();
     }
 
     public Optional<Account> get(Long id) {
@@ -42,17 +36,13 @@ public class AccountService {
             throw new IllegalArgumentException("Account title can't be blank.");
         }
 
-        var currency = currencyService.all()
-                .stream()
-                .filter(c -> c.id.equals(currencyId))
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("No currency available with id '%d'.", currencyId)
-                ));
+        if (!currencyService.exists(currencyId)) {
+            throw new IllegalArgumentException(String.format("No currency available with id '%d'.", currencyId));
+        }
 
         var account = new Account();
         account.title = title;
-        account.currency = currency;
+        account.currencyId = currencyId;
         account.description = description;
 
         return repo.save(account);

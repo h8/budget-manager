@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -16,7 +15,6 @@ import java.util.Optional;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createOptionalAccount;
 import static com.openpf.budgetmanager.testutil.CategoryHelper.createOptionalCategory;
-import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 import static com.openpf.budgetmanager.testutil.TransactionHelper.createTransaction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,7 +52,7 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Create transaction")
     void create() {
-        when(accountService.get(1L)).thenReturn(createOptionalAccount(1L, "A1", createCurrency("USD")));
+        when(accountService.get(1L)).thenReturn(createOptionalAccount(1L, "A1", 1L));
         when(categoryService.get(1L)).thenReturn(createOptionalCategory(1L, "C1"));
         when(repo.save(any())).thenAnswer(invocation -> {
             var t = (Transaction) invocation.getArgument(0);
@@ -72,7 +70,7 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Create transaction with explicit date")
     void createWithDate() {
-        when(accountService.get(1L)).thenReturn(createOptionalAccount(1L, "A1", createCurrency("USD")));
+        when(accountService.get(1L)).thenReturn(createOptionalAccount(1L, "A1", 1L));
         when(categoryService.get(1L)).thenReturn(createOptionalCategory(1L, "C1"));
         when(repo.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -86,7 +84,7 @@ class TransactionServiceTest {
     @Test
     @DisplayName("Try to create transaction with explicit but wrong date")
     void createWithInvalidDate() {
-        when(accountService.get(1L)).thenReturn(createOptionalAccount(1L, "A1", createCurrency("USD")));
+        when(accountService.get(1L)).thenReturn(createOptionalAccount(1L, "A1", 1L));
         when(categoryService.get(1L)).thenReturn(createOptionalCategory(1L, "C1"));
         assertThrows(IllegalArgumentException.class, () -> service.create(-10D, 1L, 1L, "", ""));
     }
