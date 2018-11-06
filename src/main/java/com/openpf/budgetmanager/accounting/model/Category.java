@@ -1,21 +1,12 @@
 package com.openpf.budgetmanager.accounting.model;
 
-//import javax.persistence.*;
 import org.springframework.data.annotation.Id;
 
-import java.util.List;
 
-//@Entity
-//@Table(name = "category")
 public class Category {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-//    @Column(columnDefinition = "VARCHAR(100)", unique = true)
     public String title;
-
-//    @OneToMany(fetch=FetchType.LAZY, cascade = CascadeType.ALL, mappedBy="category")
-//    public List<Transaction> transactions;
 }
