@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 
@@ -29,15 +28,14 @@ class CurrencyServiceTest {
     @Test
     @DisplayName("Return all currencies")
     void all() {
-        // TODO: sorting
-        when(repo.findAll()).thenReturn(
+        when(repo.findAllByOrderByCodeDesc()).thenReturn(
                 Arrays.asList(createCurrency("PLN"), createCurrency("USD"))
         );
 
         var list = service.all();
         assertEquals(2, list.size());
         assertEquals("PLN", list.get(0).code);
-        verify(repo).findAll();
+        verify(repo).findAllByOrderByCodeDesc();
     }
 
     @Test

@@ -3,13 +3,9 @@ package com.openpf.budgetmanager.accounting.service;
 import com.openpf.budgetmanager.accounting.model.Currency;
 import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @Service
 public class CurrencyService {
@@ -22,10 +18,7 @@ public class CurrencyService {
     }
 
     public List<Currency> all() {
-        // TODO: sorting Sort.by("code")
-        return StreamSupport
-                .stream(repo.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        return repo.findAllByOrderByCodeDesc();
     }
 
     public Currency add(String code) {
