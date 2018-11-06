@@ -47,4 +47,8 @@ public class AccountService {
 
         return repo.save(account);
     }
+
+    public boolean exists(Long id) {
+        return (id != null) && repo.existsById(id);
+    }
 }

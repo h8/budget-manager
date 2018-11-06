@@ -15,19 +15,11 @@ import java.util.Date;
 public class RepositoryConfiguration extends JdbcConfiguration {
 
     @Bean
-    public ApplicationListener<?> idSetting() {
+    public ApplicationListener<?> autoDateSetter() {
 
         return (ApplicationListener<BeforeSaveEvent>) event -> {
-
             if (event.getEntity() instanceof Transaction) {
                 var t = (Transaction) event.getEntity();
-                if (t.account != null) {
-                    t.setAccountId(t.account.id);
-                }
-
-                if (t.category != null) {
-                    t.setCategoryId(t.category.id);
-                }
 
                 if (t.createdAt == null) {
                     t.createdAt = new Date();

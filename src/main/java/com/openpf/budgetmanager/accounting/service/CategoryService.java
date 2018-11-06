@@ -53,4 +53,8 @@ public class CategoryService {
         });
         return opt;
     }
+
+    public boolean exists(Long id) {
+        return (id != null) && repo.existsById(id);
+    }
 }
