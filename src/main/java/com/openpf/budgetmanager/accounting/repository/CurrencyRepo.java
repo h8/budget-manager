@@ -9,5 +9,5 @@ import java.util.List;
 public interface CurrencyRepo extends CrudRepository<Currency, Long> {
 
     @Query("select * from currency order by code asc")
-    List<Currency> findAllByOrderByCodeDesc();
+    List<Currency> findAllByOrderByCodeAsc();
 }

@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -28,14 +29,14 @@ class CurrencyServiceTest {
     @Test
     @DisplayName("Return all currencies")
     void all() {
-        when(repo.findAllByOrderByCodeDesc()).thenReturn(
+        when(repo.findAllByOrderByCodeAsc()).thenReturn(
                 Arrays.asList(createCurrency("PLN"), createCurrency("USD"))
         );
 
         var list = service.all();
         assertEquals(2, list.size());
         assertEquals("PLN", list.get(0).code);
-        verify(repo).findAllByOrderByCodeDesc();
+        verify(repo).findAllByOrderByCodeAsc();
     }
 
     @Test
@@ -69,5 +70,11 @@ class CurrencyServiceTest {
     @DisplayName("Try to add currency with code of invalid length")
     void addWithCodeOfWrongLength() {
         assertThrows(IllegalArgumentException.class, () -> service.add("US"));
+    }
+
+    @Test
+    @DisplayName("Exists should return false for null currency id")
+    void exists() {
+        assertFalse(service.exists(null));
     }
 }

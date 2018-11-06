@@ -48,4 +48,12 @@ class CurrencyServiceIntegrationTests {
     void addExisting() {
         assertThrows(DbActionExecutionException.class, () -> service.add("PLN"));
     }
+
+    @Test
+    @Transactional
+    @DisplayName("Exists should return actual values")
+    void exists() {
+        assertTrue(service.exists(1L));
+        assertFalse(service.exists(100L));
+    }
 }
