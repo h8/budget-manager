@@ -1,7 +1,6 @@
 package com.openpf.budgetmanager.accounting.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
 public class Account {
 
@@ -12,6 +11,5 @@ public class Account {
 
     public String description;
 
-    @Column("currency_id")
     public Long currencyId;
 }
