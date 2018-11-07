@@ -109,4 +109,11 @@ class AccountServiceTests {
         assertTrue(service.all().isEmpty());
         verify(repo).findAllByOrderByTitleAsc();
     }
+
+    @Test
+    @DisplayName("Exists should return false for nulls")
+    void exists() {
+        assertFalse(service.exists(null));
+        verifyZeroInteractions(repo);
+    }
 }

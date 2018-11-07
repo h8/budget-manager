@@ -100,4 +100,13 @@ class CategoryServiceIntegrationTests {
         assertEquals("B", categories.get(1).title);
         assertEquals("F", categories.get(2).title);
     }
+
+    @Test
+    @DisplayName("Exists should return actual values")
+    @Sql({"/datasets/categories-02.sql"})
+    @Transactional
+    void exists() {
+        assertTrue(service.exists(1L));
+        assertFalse(service.exists(5L));
+    }
 }

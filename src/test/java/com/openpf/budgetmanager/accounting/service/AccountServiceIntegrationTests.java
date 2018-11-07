@@ -72,4 +72,13 @@ class AccountServiceIntegrationTests {
         assertEquals("Account 2", categories.get(1).title);
         assertEquals("X Account", categories.get(2).title);
     }
+
+    @Test
+    @DisplayName("Exists should return actual values")
+    @Sql({"/datasets/accounts-01.sql"})
+    @Transactional
+    void exists() {
+        assertTrue(service.exists(1L));
+        assertFalse(service.exists(5L));
+    }
 }

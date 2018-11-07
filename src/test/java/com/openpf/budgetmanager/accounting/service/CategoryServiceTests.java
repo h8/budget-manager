@@ -150,4 +150,11 @@ class CategoryServiceTests {
         verifyNoMoreInteractions(repo);
         assertTrue(opt.isEmpty());
     }
+
+    @Test
+    @DisplayName("Exists should return false for nulls")
+    void exists() {
+        assertFalse(categoryService.exists(null));
+        verifyZeroInteractions(repo);
+    }
 }
