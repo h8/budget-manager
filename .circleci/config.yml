@@ -14,6 +14,9 @@ jobs:
     # documented at https://circleci.com/docs/2.0/circleci-images/
     # - image: circleci/postgres:9.4
     - image: circleci/postgres:10.5-alpine-ram
+      environment:
+      - POSTGRES_USER: openpf
+      - POSTGRES_DB: opfdb_test
 
     working_directory: ~/repo
 
@@ -21,8 +24,6 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
-      POSTGRES_USER: openpf
-      POSTGRES_DB: opfdb_test
 
     steps:
     - checkout
