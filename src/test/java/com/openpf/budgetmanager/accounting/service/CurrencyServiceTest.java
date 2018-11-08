@@ -12,9 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 
 import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,5 +74,12 @@ class CurrencyServiceTest {
     @DisplayName("Exists should return false for null currency id")
     void exists() {
         assertFalse(service.exists(null));
+    }
+
+    @Test
+    @DisplayName("Get by ID with null value")
+    void getByNullId() {
+        assertTrue(service.get(null).isEmpty());
+        verifyZeroInteractions(repo);
     }
 }

@@ -56,4 +56,11 @@ class CurrencyServiceIntegrationTests {
         assertTrue(service.exists(1L));
         assertFalse(service.exists(100L));
     }
+
+    @Test
+    @DisplayName("Get by ID")
+    void get() {
+        assertTrue(service.get(1L).isPresent());
+        assertTrue(service.get(100L).isEmpty());
+    }
 }
