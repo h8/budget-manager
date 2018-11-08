@@ -30,7 +30,7 @@ or
 * Build UberJAR: `./gradlew bootJar`  
 
 ### Flyway
-All Flyway commands are available as Gradle tasks and will affect dev database, 
-except the **flywayCleanTestDB** task, which will clean a test database.
+All Flyway commands are available as Gradle tasks and will affect dev database configured
+in *src/main/resources/application.properties*
 
 Migrations are run automatically on application startup.  
