@@ -6,13 +6,8 @@ version: 2
 jobs:
   build:
     docker:
-    # specify the version you desire here
     - image: circleci/openjdk:11-jdk
 
-    # Specify service dependencies here if necessary
-    # CircleCI maintains a library of pre-built images
-    # documented at https://circleci.com/docs/2.0/circleci-images/
-    # - image: circleci/postgres:9.4
     - image: circleci/postgres:10.5-alpine-ram
       environment:
       - POSTGRES_USER: openpf
@@ -24,6 +19,7 @@ jobs:
       # Customize the JVM maximum heap limit
       JVM_OPTS: -Xmx3200m
       TERM: dumb
+      CODECOV_TOKEN: c860f430-8531-4733-b17a-bec00e4adead
 
     steps:
     - checkout
@@ -42,5 +38,19 @@ jobs:
         - ~/.gradle
         key: v1-dependencies-{{ checksum "build.gradle" }}
 
-    # run tests!
     - run: ./gradlew check jacocoTestReport
+
+    - run:
+        command: |
+          bash <(curl -s https://codecov.io/bash)
+
+    - run:
+        name: Save test results
+        command: |
+          mkdir -p ~/test-results/junit/
+          find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+        when: always
+    - store_test_results:
+        path: ~/test-results
+    - store_artifacts:
+        path: ~/test-results
