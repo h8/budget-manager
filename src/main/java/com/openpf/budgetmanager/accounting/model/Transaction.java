@@ -1,36 +1,22 @@
 package com.openpf.budgetmanager.accounting.model;
 
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "transaction")
 public class Transaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @Column
     public Double amount;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="account_id")
-    public Account account;
+    public Long accountId;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="category_id")
-    public Category category;
+    public Long categoryId;
 
-    @Column(columnDefinition = "TEXT")
     public String description;
 
-    @Column(columnDefinition = "DATE")
     public Date date;
 
-    @CreationTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
     public Date createdAt;
 }

@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
-import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,7 +25,7 @@ class MutationAccountResolverTests {
     @Test
     @DisplayName("Add new account")
     void addAccount() {
-        when(service.create("A1", 1L, "")).thenReturn(createAccount(1L, "A1", createCurrency("PLN")));
+        when(service.create("A1", 1L, "")).thenReturn(createAccount(1L, "A1", 1L));
 
         var a = resolver.addAccount("A1", 1L, "");
         assertEquals("A1", a.title);

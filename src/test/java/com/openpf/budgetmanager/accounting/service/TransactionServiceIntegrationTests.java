@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @ExtendWith(SpringExtension.class)
@@ -32,6 +33,7 @@ class TransactionServiceIntegrationTests {
         var list = transactionService.all();
 
         assertEquals(3, list.size());
+        assertNotNull(list.get(0).accountId);
         assertEquals(2L, (long) list.get(0).id);
         assertEquals(1L, (long) list.get(1).id);
     }
@@ -46,5 +48,27 @@ class TransactionServiceIntegrationTests {
         assertNotNull(t.id);
         assertNotNull(t.date);
         assertNotNull(t.createdAt);
+    }
+
+    @Test
+    @DisplayName("Create new without category")
+    @Sql({"/datasets/accounts-01.sql"})
+    @Transactional
+    void createWithoutCategory() {
+        var t = transactionService.create(1.0, 1L, null, "", null);
+
+        assertNotNull(t.id);
+        assertNull(t.categoryId);
+    }
+
+    @Test
+    @DisplayName("Create new with wrong category")
+    @Sql({"/datasets/accounts-01.sql"})
+    @Transactional
+    void createWithWrongCategory() {
+        var t = transactionService.create(1.0, 1L, 15L, "", null);
+
+        assertNotNull(t.id);
+        assertNull(t.categoryId);
     }
 }

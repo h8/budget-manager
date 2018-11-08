@@ -8,13 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 
 import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,14 +27,14 @@ class CurrencyServiceTest {
     @Test
     @DisplayName("Return all currencies")
     void all() {
-        when(repo.findAll(Sort.by("code"))).thenReturn(
+        when(repo.findAllByOrderByCodeAsc()).thenReturn(
                 Arrays.asList(createCurrency("PLN"), createCurrency("USD"))
         );
 
         var list = service.all();
         assertEquals(2, list.size());
         assertEquals("PLN", list.get(0).code);
-        verify(repo).findAll((Sort) any());
+        verify(repo).findAllByOrderByCodeAsc();
     }
 
     @Test
@@ -70,5 +68,18 @@ class CurrencyServiceTest {
     @DisplayName("Try to add currency with code of invalid length")
     void addWithCodeOfWrongLength() {
         assertThrows(IllegalArgumentException.class, () -> service.add("US"));
+    }
+
+    @Test
+    @DisplayName("Exists should return false for null currency id")
+    void exists() {
+        assertFalse(service.exists(null));
+    }
+
+    @Test
+    @DisplayName("Get by ID with null value")
+    void getByNullId() {
+        assertTrue(service.get(null).isEmpty());
+        verifyZeroInteractions(repo);
     }
 }

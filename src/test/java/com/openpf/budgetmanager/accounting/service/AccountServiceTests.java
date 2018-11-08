@@ -2,20 +2,17 @@ package com.openpf.budgetmanager.accounting.service;
 
 import com.openpf.budgetmanager.accounting.model.Account;
 import com.openpf.budgetmanager.accounting.repository.AccountRepo;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Sort;
 
 import java.util.Collections;
 import java.util.Optional;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
-import static com.openpf.budgetmanager.testutil.CurrencyHelper.createCurrency;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -51,7 +48,7 @@ class AccountServiceTests {
     @Test
     @DisplayName("Get by Id returns data")
     void getByIdReturnsEntity() {
-        Account a = createAccount(1L, "A1", createCurrency("USD"));
+        Account a = createAccount(1L, "A1", 1L);
 
         when(repo.findById(a.id)).thenReturn(Optional.of(a));
 
@@ -63,9 +60,8 @@ class AccountServiceTests {
     @Test
     @DisplayName("Create new account")
     void createNew() {
-        var c = createCurrency("GBP");
-        c.id = 1L;
-        when(currencyService.all()).thenReturn(Collections.singletonList(c));
+        long currencyId = 1L;
+        when(currencyService.exists(currencyId)).thenReturn(true);
 
         when(repo.save(any())).thenAnswer(invocation -> {
             var a = (Account) invocation.getArgument(0);
@@ -73,21 +69,21 @@ class AccountServiceTests {
             return a;
         });
 
-        var account = service.create("Account 1", c.id, "Description");
+        var account = service.create("Account 1", currencyId, "Description");
         assertNotNull(account.id);
         assertEquals("Account 1", account.title);
-        assertEquals(c.code, account.currency.code);
-        verify(currencyService).all();
+        assertEquals(currencyId, (long) account.currencyId);
+        verify(currencyService).exists(currencyId);
         verify(repo).save(any());
     }
 
     @Test
     @DisplayName("Try to create new account with invalid currency")
     void createNewWithInvalidCurrency() {
-        when(currencyService.all()).thenReturn(Lists.emptyList());
+        when(currencyService.exists(10L)).thenReturn(false);
 
         assertThrows(IllegalArgumentException.class, () -> service.create("A1", 10L, null));
-        verify(currencyService).all();
+        verify(currencyService).exists(10L);
         verifyZeroInteractions(repo);
     }
 
@@ -108,9 +104,16 @@ class AccountServiceTests {
     @Test
     @DisplayName("Get all accounts")
     void all() {
-        when(repo.findAll((Sort) any())).thenReturn(Collections.emptyList());
+        when(repo.findAllByOrderByTitleAsc()).thenReturn(Collections.emptyList());
 
         assertTrue(service.all().isEmpty());
-        verify(repo).findAll((Sort) any());
+        verify(repo).findAllByOrderByTitleAsc();
+    }
+
+    @Test
+    @DisplayName("Exists should return false for nulls")
+    void exists() {
+        assertFalse(service.exists(null));
+        verifyZeroInteractions(repo);
     }
 }

@@ -10,4 +10,12 @@ public class CurrencyHelper {
 
         return c;
     }
+
+    public static Currency createCurrency(Long id, String code) {
+        var c = new Currency();
+        c.id = id;
+        c.code = code.toUpperCase();
+
+        return c;
+    }
 }

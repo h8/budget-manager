@@ -3,10 +3,10 @@ package com.openpf.budgetmanager.accounting.service;
 import com.openpf.budgetmanager.accounting.model.Currency;
 import com.openpf.budgetmanager.accounting.repository.CurrencyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CurrencyService {
@@ -18,8 +18,14 @@ public class CurrencyService {
         this.repo = repo;
     }
 
+    public Optional<Currency> get(Long id) {
+        return (id != null)
+                ? repo.findById(id)
+                : Optional.empty();
+    }
+
     public List<Currency> all() {
-        return repo.findAll(Sort.by("code"));
+        return repo.findAllByOrderByCodeAsc();
     }
 
     public Currency add(String code) {
@@ -33,5 +39,9 @@ public class CurrencyService {
         c.code = code.toUpperCase();
 
         return repo.save(c);
+    }
+
+    public boolean exists(Long id) {
+        return (id != null) && repo.existsById(id);
     }
 }

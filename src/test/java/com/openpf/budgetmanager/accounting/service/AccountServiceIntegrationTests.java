@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -58,7 +58,7 @@ class AccountServiceIntegrationTests {
     @Sql({"/datasets/accounts-01.sql"})
     @Transactional
     void createNewWithExistingName() {
-        assertThrows(DataIntegrityViolationException.class, () -> service.create("Account 1", 1L, ""));
+        assertThrows(DbActionExecutionException.class, () -> service.create("Account 1", 1L, ""));
     }
 
     @Test
@@ -71,5 +71,14 @@ class AccountServiceIntegrationTests {
         assertEquals("Account 1", categories.get(0).title);
         assertEquals("Account 2", categories.get(1).title);
         assertEquals("X Account", categories.get(2).title);
+    }
+
+    @Test
+    @DisplayName("Exists should return actual values")
+    @Sql({"/datasets/accounts-01.sql"})
+    @Transactional
+    void exists() {
+        assertTrue(service.exists(1L));
+        assertFalse(service.exists(5L));
     }
 }

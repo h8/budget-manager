@@ -3,7 +3,6 @@ package com.openpf.budgetmanager.accounting.service;
 import com.openpf.budgetmanager.accounting.model.Category;
 import com.openpf.budgetmanager.accounting.repository.CategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class CategoryService {
     }
 
     public List<Category> all() {
-        return repo.findAll(Sort.by("title"));
+        return repo.findAllByOrderByTitleAsc();
     }
 
     public Optional<Category> rename(Long id, String title) {
@@ -53,5 +52,9 @@ public class CategoryService {
             repo.save(category);
         });
         return opt;
+    }
+
+    public boolean exists(Long id) {
+        return (id != null) && repo.existsById(id);
     }
 }

@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Sort;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -98,10 +97,10 @@ class CategoryServiceTests {
     @Test
     @DisplayName("Get all categories")
     void all() {
-        when(repo.findAll((Sort) any())).thenReturn(Collections.emptyList());
+        when(repo.findAllByOrderByTitleAsc()).thenReturn(Collections.emptyList());
 
         assertTrue(categoryService.all().isEmpty());
-        verify(repo).findAll((Sort) any());
+        verify(repo).findAllByOrderByTitleAsc();
     }
 
     @Test
@@ -150,5 +149,12 @@ class CategoryServiceTests {
         verify(repo).findById(any());
         verifyNoMoreInteractions(repo);
         assertTrue(opt.isEmpty());
+    }
+
+    @Test
+    @DisplayName("Exists should return false for nulls")
+    void exists() {
+        assertFalse(categoryService.exists(null));
+        verifyZeroInteractions(repo);
     }
 }

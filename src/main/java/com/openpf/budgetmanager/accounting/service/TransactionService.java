@@ -4,7 +4,6 @@ import com.openpf.budgetmanager.accounting.model.Transaction;
 import com.openpf.budgetmanager.accounting.repository.TransactionRepo;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -34,19 +33,23 @@ public class TransactionService {
     }
 
     public List<Transaction> all() {
-        return repo.findAll(Sort.by("date").descending());
+        return repo.findAllByOrderByDateDesc();
     }
 
     public Transaction create(
             double amount, long accountId,
             Long categoryId, String description, String date
     ) {
+        if (!accountService.exists(accountId)) {
+            throw new IllegalArgumentException(String.format("Account with id '%d' doesn't exist.", accountId));
+        }
+
         var t = new Transaction();
         t.amount = amount;
-        t.account = accountService.get(accountId).orElseThrow(() ->
-                new IllegalArgumentException(String.format("Account with id '%d' doesn't exist.", accountId))
-        );
-        t.category = categoryService.get(categoryId).orElse(null);
+        t.accountId = accountId;
+        t.categoryId = (categoryService.exists(categoryId))
+                ? categoryId
+                : null;
         t.description = description;
         t.date = (date != null)
                 ? parseDate(date)

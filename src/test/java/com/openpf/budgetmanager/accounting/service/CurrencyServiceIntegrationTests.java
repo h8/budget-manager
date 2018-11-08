@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.relational.core.conversion.DbActionExecutionException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +46,21 @@ class CurrencyServiceIntegrationTests {
     @Transactional
     @DisplayName("Try to add currency with existing code")
     void addExisting() {
-        assertThrows(DataIntegrityViolationException.class, () -> service.add("PLN"));
+        assertThrows(DbActionExecutionException.class, () -> service.add("PLN"));
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("Exists should return actual values")
+    void exists() {
+        assertTrue(service.exists(1L));
+        assertFalse(service.exists(100L));
+    }
+
+    @Test
+    @DisplayName("Get by ID")
+    void get() {
+        assertTrue(service.get(1L).isPresent());
+        assertTrue(service.get(100L).isEmpty());
     }
 }
