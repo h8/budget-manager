@@ -1,4 +1,6 @@
-# Budget Manager
+# Budget Manager [![CircleCI](https://circleci.com/gh/h8/budget-manager/tree/develop.svg?style=svg)](https://circleci.com/gh/h8/budget-manager/tree/develop) [![codecov](https://codecov.io/gh/h8/budget-manager/branch/develop/graph/badge.svg)](https://codecov.io/gh/h8/budget-manager)
+
+
 
 Just an application for managing personal budget and expenses. 
 Nothing really works for now `¯\_(ツ)_/¯`
