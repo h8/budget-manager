@@ -65,6 +65,14 @@ jacoco {
     toolVersion = '0.8.2'
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        xml.setDestination(new File("${buildDir}/reports/jacoco/report.xml"))
+        html.enabled true
+    }
+}
+
 gitProperties {
     keys = [
             'git.branch',
@@ -80,6 +88,7 @@ gitProperties {
 }
 
 test {
+    reports.junitXml.enabled = true
     useJUnitPlatform {
         includeEngines 'junit-jupiter'
         excludeTags 'slow'
@@ -87,6 +96,7 @@ test {
 }
 
 task testIntegration(type: Test) {
+    reports.junitXml.enabled = true
     useJUnitPlatform {
         includeEngines 'junit-jupiter'
         includeTags 'slow'
