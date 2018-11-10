@@ -10,10 +10,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
-import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.openpf.budgetmanager.testutil.CategoryHelper.createCategory;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -97,7 +99,7 @@ class CategoryServiceTests {
     @Test
     @DisplayName("Get all categories")
     void all() {
-        when(repo.findAllByOrderByTitleAsc()).thenReturn(Collections.emptyList());
+        when(repo.findAllByOrderByTitleAsc()).thenReturn(emptyList());
 
         assertTrue(categoryService.all().isEmpty());
         verify(repo).findAllByOrderByTitleAsc();
@@ -156,5 +158,15 @@ class CategoryServiceTests {
     void exists() {
         assertFalse(categoryService.exists(null));
         verifyZeroInteractions(repo);
+    }
+
+    @Test
+    @DisplayName("Get many by empty list")
+    void getMany() {
+        Set<Long> ids = emptySet();
+        when(repo.findAllById(ids)).thenReturn(emptyList());
+
+        assertTrue(categoryService.getMany(ids).isEmpty());
+        verify(repo).findAllById(ids);
     }
 }

@@ -1,7 +1,9 @@
 package com.openpf.budgetmanager.api.graphql;
 
+import com.openpf.budgetmanager.accounting.model.Category;
 import com.openpf.budgetmanager.accounting.service.AccountService;
-import com.openpf.budgetmanager.accounting.service.CategoryService;
+import org.dataloader.DataLoader;
+import org.dataloader.DataLoaderRegistry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,12 +13,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createOptionalAccount;
-import static com.openpf.budgetmanager.testutil.CategoryHelper.createOptionalCategory;
+import static com.openpf.budgetmanager.testutil.CategoryHelper.createCategory;
 import static com.openpf.budgetmanager.testutil.TransactionHelper.createTransaction;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static java.util.concurrent.CompletableFuture.completedFuture;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +31,10 @@ class TransactionResolverTests {
     private AccountService accountService;
 
     @Mock
-    private CategoryService categoryService;
+    private DataLoaderRegistry loaders;
+
+    @Mock
+    private DataLoader<Long, Category> loader;
 
     @InjectMocks
     private TransactionResolver resolver;
@@ -51,19 +59,36 @@ class TransactionResolverTests {
 
     @Test
     @DisplayName("Get category by ID")
-    void getCategory() {
+    void getCategory() throws ExecutionException, InterruptedException {
         var t = createTransaction(1L);
 
-        when(categoryService.get(t.categoryId)).thenReturn(createOptionalCategory(t.categoryId, "C1"));
-        assertEquals(t.categoryId, resolver.getCategory(t).id);
+        when(loader.load(t.categoryId)).thenReturn(completedFuture(createCategory(t.categoryId, "C1")));
+        when(loaders.getDataLoader("category")).then(invocation -> loader);
+
+        assertEquals(t.categoryId, resolver.getCategory(t).get().id);
+        verify(loader).load(t.categoryId);
     }
 
     @Test
     @DisplayName("Get category by ID and category not present")
-    void getCategoryAndThrow() {
+    void getCategoryAndReturnNull() throws ExecutionException, InterruptedException {
         var t = createTransaction(1L);
 
-        when(categoryService.get(t.categoryId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> resolver.getCategory(t));
+        when(loader.load(t.categoryId)).thenReturn(completedFuture(null));
+        when(loaders.getDataLoader("category")).then(invocation -> loader);
+
+        assertNull(resolver.getCategory(t).get());
+        verify(loader).load(t.categoryId);
+    }
+
+    @Test
+    @DisplayName("Get category by ID and category is null")
+    void getCategoryByNullId() throws ExecutionException, InterruptedException {
+        var t = createTransaction(1L);
+        t.categoryId = null;
+
+        assertNull(resolver.getCategory(t).get());
+        verifyZeroInteractions(loader);
+        verifyZeroInteractions(loaders);
     }
 }
