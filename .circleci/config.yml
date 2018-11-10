@@ -10,8 +10,8 @@ jobs:
 
     - image: circleci/postgres:10.5-alpine-ram
       environment:
-      - POSTGRES_USER: openpf
-      - POSTGRES_DB: opfdb_test
+        POSTGRES_USER: openpf
+        POSTGRES_DB: opfdb_test
 
     working_directory: ~/repo
 
