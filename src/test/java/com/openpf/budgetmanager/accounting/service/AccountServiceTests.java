@@ -11,8 +11,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -115,5 +118,15 @@ class AccountServiceTests {
     void exists() {
         assertFalse(service.exists(null));
         verifyZeroInteractions(repo);
+    }
+
+    @Test
+    @DisplayName("Get many by empty list")
+    void getMany() {
+        Set<Long> ids = emptySet();
+        when(repo.findAllById(ids)).thenReturn(emptyList());
+
+        assertTrue(service.getMany(ids).isEmpty());
+        verify(repo).findAllById(ids);
     }
 }

@@ -1,5 +1,6 @@
 package com.openpf.budgetmanager.api.graphql;
 
+import com.openpf.budgetmanager.accounting.model.Account;
 import com.openpf.budgetmanager.accounting.model.Category;
 import com.openpf.budgetmanager.accounting.service.AccountService;
 import org.dataloader.DataLoader;
@@ -11,18 +12,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import static com.openpf.budgetmanager.testutil.AccountHelper.createOptionalAccount;
+import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
 import static com.openpf.budgetmanager.testutil.CategoryHelper.createCategory;
 import static com.openpf.budgetmanager.testutil.TransactionHelper.createTransaction;
 import static java.util.concurrent.CompletableFuture.completedFuture;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionResolverTests {
@@ -34,27 +32,36 @@ class TransactionResolverTests {
     private DataLoaderRegistry loaders;
 
     @Mock
-    private DataLoader<Long, Category> loader;
+    private DataLoader<Long, Category> categoryLoader;
+
+    @Mock
+    private DataLoader<Long, Account> accountLoader;
 
     @InjectMocks
     private TransactionResolver resolver;
 
     @Test
     @DisplayName("Get account by ID")
-    void getAccount() {
+    void getAccount() throws ExecutionException, InterruptedException {
         var t = createTransaction(1L);
 
-        when(accountService.get(t.accountId)).thenReturn(createOptionalAccount(t.accountId, "A1", 10L));
-        assertEquals(t.accountId, resolver.getAccount(t).id);
+        when(accountLoader.load(t.accountId)).thenReturn(completedFuture(createAccount(t.accountId, "A1", 10L)));
+        when(loaders.getDataLoader("account")).then(invocation -> accountLoader);
+
+        assertEquals(t.accountId, resolver.getAccount(t).get().id);
+        verify(accountLoader).load(t.accountId);
     }
 
     @Test
     @DisplayName("Get account by ID and account not present")
-    void getAccountAndThrow() {
+    void getAccountAndGetNull() throws ExecutionException, InterruptedException {
         var t = createTransaction(1L);
 
-        when(accountService.get(t.accountId)).thenReturn(Optional.empty());
-        assertThrows(NoSuchElementException.class, () -> resolver.getAccount(t));
+        when(accountLoader.load(t.accountId)).thenReturn(completedFuture(null));
+        when(loaders.getDataLoader("account")).then(invocation -> accountLoader);
+
+        assertNull(resolver.getAccount(t).get());
+        verify(accountLoader).load(t.accountId);
     }
 
     @Test
@@ -62,11 +69,11 @@ class TransactionResolverTests {
     void getCategory() throws ExecutionException, InterruptedException {
         var t = createTransaction(1L);
 
-        when(loader.load(t.categoryId)).thenReturn(completedFuture(createCategory(t.categoryId, "C1")));
-        when(loaders.getDataLoader("category")).then(invocation -> loader);
+        when(categoryLoader.load(t.categoryId)).thenReturn(completedFuture(createCategory(t.categoryId, "C1")));
+        when(loaders.getDataLoader("category")).then(invocation -> categoryLoader);
 
         assertEquals(t.categoryId, resolver.getCategory(t).get().id);
-        verify(loader).load(t.categoryId);
+        verify(categoryLoader).load(t.categoryId);
     }
 
     @Test
@@ -74,11 +81,11 @@ class TransactionResolverTests {
     void getCategoryAndReturnNull() throws ExecutionException, InterruptedException {
         var t = createTransaction(1L);
 
-        when(loader.load(t.categoryId)).thenReturn(completedFuture(null));
-        when(loaders.getDataLoader("category")).then(invocation -> loader);
+        when(categoryLoader.load(t.categoryId)).thenReturn(completedFuture(null));
+        when(loaders.getDataLoader("category")).then(invocation -> categoryLoader);
 
         assertNull(resolver.getCategory(t).get());
-        verify(loader).load(t.categoryId);
+        verify(categoryLoader).load(t.categoryId);
     }
 
     @Test
@@ -88,7 +95,7 @@ class TransactionResolverTests {
         t.categoryId = null;
 
         assertNull(resolver.getCategory(t).get());
-        verifyZeroInteractions(loader);
+        verifyZeroInteractions(categoryLoader);
         verifyZeroInteractions(loaders);
     }
 }
