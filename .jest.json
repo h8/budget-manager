@@ -15,6 +15,14 @@
     "src/main/js/**/*.js",
     "!src/test/js/**/*.js"
   ],
+  "coverageThreshold": {
+    "global": {
+      "branches": 100,
+      "functions": 100,
+      "lines": 100,
+      "statements": 100
+    }
+  },
   "coverageDirectory": "<rootDir>/build/reports/js",
   "coverageReporters": ["text-summary", "html"]
 }
