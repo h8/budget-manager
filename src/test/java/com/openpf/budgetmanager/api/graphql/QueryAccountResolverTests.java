@@ -1,6 +1,9 @@
 package com.openpf.budgetmanager.api.graphql;
 
+import com.openpf.budgetmanager.accounting.model.Account;
 import com.openpf.budgetmanager.accounting.service.AccountService;
+import org.dataloader.DataLoader;
+import org.dataloader.DataLoaderRegistry;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,12 +12,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
-import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static com.openpf.budgetmanager.testutil.AccountHelper.createAccount;
+import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,6 +26,13 @@ class QueryAccountResolverTests {
 
     @Mock
     private AccountService service;
+
+    @Mock
+    private DataLoaderRegistry loaders;
+
+    @Mock
+    private DataLoader<Long, Account> loader;
+
 
     @InjectMocks
     private QueryAccountResolver resolver;
@@ -41,21 +51,22 @@ class QueryAccountResolverTests {
 
     @Test
     @DisplayName("Get single existing account")
-    void getExistingAccount() {
-        when(service.get(10L)).thenReturn(Optional.of(createAccount(10L, "A10", 1L)));
+    void getExistingAccount() throws ExecutionException, InterruptedException {
+        when(loader.load(10L)).thenReturn(completedFuture(createAccount(10L, "A10", 1L)));
+        when(loaders.getDataLoader("account")).then(invocation -> loader);
 
-        var opt = resolver.getAccount(10L);
-        verify(service).get(10L);
-        assertTrue(opt.isPresent());
-        assertEquals("A10", opt.get().title);
+        var a = resolver.getAccount(10L).get();
+        verify(loader).load(10L);
+        assertEquals("A10", a.title);
     }
 
     @Test
     @DisplayName("Get non existing account")
-    void getNonExistingAccount() {
-        when(service.get(any())).thenReturn(Optional.empty());
+    void getNonExistingAccount() throws ExecutionException, InterruptedException {
+        when(loader.load(10L)).thenReturn(completedFuture(null));
+        when(loaders.getDataLoader("account")).then(invocation -> loader);
 
-        assertTrue(resolver.getAccount(10L).isEmpty());
-        verify(service).get(any());
+        assertNull(resolver.getAccount(10L).get());
+        verify(loader).load(10L);
     }
 }

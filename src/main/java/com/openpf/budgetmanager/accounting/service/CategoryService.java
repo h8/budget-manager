@@ -1,5 +1,6 @@
 package com.openpf.budgetmanager.accounting.service;
 
+import com.google.common.collect.Lists;
 import com.openpf.budgetmanager.accounting.model.Category;
 import com.openpf.budgetmanager.accounting.repository.CategoryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -56,5 +58,9 @@ public class CategoryService {
 
     public boolean exists(Long id) {
         return (id != null) && repo.existsById(id);
+    }
+
+    public List<Category> getMany(Set<Long> keys) {
+        return Lists.newLinkedList(repo.findAllById(keys));
     }
 }

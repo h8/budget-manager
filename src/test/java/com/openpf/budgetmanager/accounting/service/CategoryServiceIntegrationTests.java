@@ -1,5 +1,6 @@
 package com.openpf.budgetmanager.accounting.service;
 
+import com.google.common.collect.Sets;
 import com.openpf.budgetmanager.accounting.model.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -13,7 +14,9 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -108,5 +111,19 @@ class CategoryServiceIntegrationTests {
     void exists() {
         assertTrue(service.exists(1L));
         assertFalse(service.exists(5L));
+    }
+
+    @Test
+    @DisplayName("Get many should return actual values")
+    @Sql({"/datasets/categories-02.sql"})
+    @Transactional
+    void getMany() {
+        var categories = service.getMany(Sets.newHashSet(1L, 2L, 15L)).stream()
+                .sorted(Comparator.comparing(c -> c.id))
+                .collect(Collectors.toList());
+
+        assertEquals(2, categories.size());
+        assertEquals(1L, (long) categories.get(0).id);
+        assertEquals(2L, (long) categories.get(1).id);
     }
 }
