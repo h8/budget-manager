@@ -5,11 +5,19 @@ module.exports = {
   },
   parser: "babel-eslint",
   plugins: [
-    "jest"
+    "jest",
+    "react"
   ],
   extends: [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   rules: {
+    "react/prop-types": "warn"
+  },
+  settings: {
+    react: {
+      version: "16.6"
+    }
   }
 };
