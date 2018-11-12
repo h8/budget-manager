@@ -14,4 +14,4 @@ export {
   plus
 };
 
-render ((<ReactComponent />), document.getElementById('container') || document.createElement('container'));
+render ((<ReactComponent />), document.getElementById('container'));
