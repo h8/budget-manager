@@ -27,3 +27,8 @@
 
 ### Specific tools files ###
 /graphql.config.json
+
+### JS ###
+/node_modules/
+/yarn-error.log
+/src/main/webapp/js/
