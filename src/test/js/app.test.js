@@ -1,5 +1,15 @@
-import {plus} from "../../main/js/app";
+jest.mock('react-dom', function () {
+  return {
+    render: jest.fn()
+  };
+});
 
-test("1 + 2 should be 3", () => {
-  expect(plus(1, 2)).toBe(3);
+it('creates store, renders root component and starts app', function() {
+  const mountPoint = {id: 'container'};
+  const getMountPoint = jest.spyOn(global.document, 'getElementById').mockImplementation(() => mountPoint);
+  require('../../main/js/app');
+
+  const ReactDOM = require('react-dom');
+  expect(getMountPoint).toHaveBeenCalledWith('container');
+  expect(ReactDOM.render).toHaveBeenCalledWith(expect.anything(), mountPoint);
 });
