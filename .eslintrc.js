@@ -15,7 +15,8 @@ module.exports = {
     "plugin:react/recommended"
   ],
   rules: {
-    "react/prop-types": "warn"
+    "react/prop-types": "warn",
+    "no-console": "warn"
   },
   settings: {
     react: {
