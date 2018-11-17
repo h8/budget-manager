@@ -1,14 +1,16 @@
 jest.mock('../../main/js/store', function () {
   const {mockStore} = require('./store_mock');
   let store = mockStore({});
-  return {
-    default: jest.fn(() => store),
-  };
+  let createStore = jest.fn(() => store);
+  createStore.default = createStore;
+  return createStore;
 });
 
 jest.mock('react-dom', function () {
+  const render = jest.fn();
   return {
-    render: jest.fn()
+    default: { render },
+    render
   };
 });
 
