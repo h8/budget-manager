@@ -16,6 +16,7 @@ buildscript {
 plugins {
     id "org.flywaydb.flyway" version "5.2.1"
     id "com.gorylenko.gradle-git-properties" version "2.0.0-beta1"
+    id 'com.palantir.docker-run' version '0.25.0'
 }
 
 apply plugin: 'java'
@@ -119,4 +120,13 @@ flyway {
     url = devDBUrl
     user = devDBUsername
     configurations = [ 'compile', 'flywayMigration' ]
+}
+
+dockerRun {
+    name 'gqldemo-pg'
+    image 'postgres:latest'
+    daemonize true
+	clean false
+	env 'POSTGRES_USER': 'openpf', 'POSTGRES_PASSWORD': 'openpf'
+	arguments '-p=5432:5432'
 }

@@ -1,5 +1,6 @@
 .gradle
 /build/
+/bin/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### STS ###
@@ -32,3 +33,6 @@
 /node_modules/
 /yarn-error.log
 /src/main/webapp/js/
+
+### VSCode ###
+.vscode

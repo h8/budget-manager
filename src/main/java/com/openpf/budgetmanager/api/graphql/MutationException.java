@@ -10,6 +10,11 @@ import java.util.*;
 
 public class MutationException extends GraphQLException implements GraphQLError {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 600231084877984751L;
+
     public MutationException(String message) {
         super(message);
     }
